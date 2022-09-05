@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+data/train_input/
+data/test_input/
+data/train_input_label.json
+data/test_input_label.json
+runs/
+weight/
