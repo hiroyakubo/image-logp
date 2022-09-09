@@ -18,7 +18,7 @@ from torchvision.models.feature_extraction import create_feature_extractor
 batch_size = 2
 lr = 0.001
 momentum = 0.9
-epochs = 7
+epochs = 15
 model_name = "googlenet"
 device = "cuda"
 data_dir = "data"
@@ -141,7 +141,9 @@ def plot_distribution(
 
     df = dataset.df.copy()
     df["logp"] = df["SMILES"].apply(lambda x: label[x])
-    df["c_count"] = df["SMILES"].apply(lambda x: x.count("C"))
+
+    not_carbon = ["Ca", "Cr", "Co", "Cu", "Cs", "Cn", "Ce", "Cf"]
+    df["c_count"] = df["SMILES"].apply(lambda x: x.count("C") - sum([x.count(nc) for nc in not_carbon]))
     df.plot.scatter(x="c_count", y="logp", ax=axes[0])
     axes[0].set_title("C vs logp")
 
@@ -160,24 +162,14 @@ def plot_distribution(
     plt.savefig("carbon_logp.png")
 
 
-def plot_layer():
-    model = create_model(model_name, load_weight=True)
+def plot_layer(model, testset, ds, plot_num:int=5):
     feature_extractor = create_feature_extractor(model, {"inception3b": "feature"})
-
-    data_transform = transforms.Compose([
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ])
-
-    testset = Dataset(data_dir, "test_input.csv")
-    testset.create_dataset(prepare=False)
     testloader = torch.utils.data.DataLoader(testset, batch_size=1)
-
-    plot_num = 5
     fig, axes = plt.subplots(nrows=2, ncols=plot_num, figsize=(9, 6))
     step = 0
     for i, (inputs, _) in enumerate(testloader):
         inputs = inputs.to(device).float()
-        inputs_aug = data_transform(inputs)
+        inputs_aug = ds(inputs)
         feature = feature_extractor(inputs_aug)
         fm = feature["feature"]
         
@@ -292,10 +284,11 @@ def val(valloader=None, model=None, silent=False, plot=False):
     if plot:
         output_array = np.array(output_list)
         plot_distribution(output_array, valset)
-        plot_layer()
+        plot_layer(model, valset, data_transform)
 
     return mse
 
 
 if __name__ == "__main__":
     train()
+    # val(plot=True)
