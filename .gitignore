@@ -134,3 +134,5 @@ data/train_input_label.json
 data/test_input_label.json
 runs/
 weight/
+carbon_logp.png
+layer.png
