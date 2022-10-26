@@ -134,5 +134,7 @@ data/train_input_label.json
 data/test_input_label.json
 runs/
 weight/
+model.pth
+model.tar.gz
 carbon_logp.png
 layer.png

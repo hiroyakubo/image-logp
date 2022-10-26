@@ -23,7 +23,8 @@ model_name = "googlenet"
 device = "cuda"
 data_dir = "data"
 weight_dir = "weight"
-model_path = os.path.join(weight_dir, "model.pt")
+model_path = os.path.join(weight_dir, "model.pth")
+is_prepare = True
 
 
 class Dataset(torch.utils.data.Dataset):
@@ -196,10 +197,10 @@ def train():
     ])
 
     trainset = Dataset(data_dir, "train_input.csv")
-    trainset.create_dataset(prepare=False)
+    trainset.create_dataset(prepare=is_prepare)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size)
     valset = Dataset(data_dir, "test_input.csv")
-    valset.create_dataset(prepare=False)
+    valset.create_dataset(prepare=is_prepare)
     valloader = torch.utils.data.DataLoader(valset, batch_size=batch_size)
 
     model = create_model(model_name)
