@@ -7,9 +7,8 @@ from sagemaker.pytorch.model import PyTorchModel
 from sagemaker import get_execution_role
 
 
-# role = get_execution_role()
-role = "arn:aws:iam::552371609228:role/service-role/AmazonSageMaker-ExecutionRole-20221012T102437"
-s3_path="s3://model-bucket1/model.tar.gz"
+role = get_execution_role()
+s3_path="s3://path/to/model.tar.gz"
 endpoint_name = "logp1"
 region = "us-east-1"
 
@@ -74,9 +73,9 @@ def delete():
 
 
 def main():
-    # deploy()
-    # predict()
-    delete()
+    deploy()
+    predict()
+    # delete()
 
 if __name__ == "__main__":
     main()

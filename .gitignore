@@ -136,5 +136,3 @@ runs/
 weight/
 model.pth
 model.tar.gz
-carbon_logp.png
-layer.png
